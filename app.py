@@ -1,9 +1,13 @@
-<!DOCTYPE html>
+from flask import Flask
+
+app = Flask(__name__)
+
+HTML = """<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Cosmic Curriculum – Interactive Subject Galaxy</title>
+<title>Cosmic Curriculum - Interactive Subject Galaxy</title>
 <style>
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
   body {
@@ -116,7 +120,7 @@
 </head>
 <body>
   <div id="header">
-    <h1>✦ Cosmic Curriculum</h1>
+    <h1>&#10022; Cosmic Curriculum</h1>
     <p>Click a star to explore</p>
   </div>
   <div id="tooltip"></div>
@@ -281,7 +285,7 @@
     labelDiv.style.fontSize = '14px';
     labelDiv.style.fontWeight = '400';
     labelDiv.style.letterSpacing = '1px';
-    labelDiv.style.textShadow = `0 0 20px ${cat.color}, 0 0 60px ${cat.color}`;
+    labelDiv.style.textShadow = '0 0 20px ' + cat.color + ', 0 0 60px ' + cat.color;
     labelDiv.style.background = 'rgba(0,0,0,0.35)';
     labelDiv.style.padding = '4px 14px';
     labelDiv.style.borderRadius = '12px';
@@ -329,6 +333,14 @@
       renderer.domElement.style.cursor = 'default';
       tooltipEl.classList.remove('visible');
     }
+  }
+  function clearHover() {
+    if (hoveredIndex >= 0) {
+      const obj = starObjects[hoveredIndex];
+      obj.meshMat.emissiveIntensity = 0.3;
+      obj.glowMat.opacity = 0.45;
+    }
+    hoveredIndex = -1;
   }
   function onClick(event) {
     const panel = document.getElementById('info-panel');
@@ -455,4 +467,11 @@
   window.addEventListener('resize', onResize);
   </script>
 </body>
-</html>
+</html>"""
+
+@app.route("/")
+def index():
+    return HTML
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=8080)
