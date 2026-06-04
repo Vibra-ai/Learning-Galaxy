@@ -1,22 +1,14 @@
 import streamlit as st
 
-st.set_page_config(
-    page_title="Cosmic Curriculum",
-    page_icon="✨",
-    layout="wide",
-    initial_sidebar_state="collapsed",
-)
+st.set_page_config(page_title="Cosmic Curriculum", page_icon="✨", layout="wide", initial_sidebar_state="collapsed")
 
-st.markdown(
-    """
+st.markdown("""
 <style>
   .stApp { margin: 0; padding: 0; overflow: hidden; }
   .block-container { padding: 0 !important; max-width: 100% !important; }
   iframe { border: none !important; }
 </style>
-""",
-    unsafe_allow_html=True,
-)
+""", unsafe_allow_html=True)
 
 HTML = """<!DOCTYPE html>
 <html lang="en">
@@ -25,104 +17,36 @@ HTML = """<!DOCTYPE html>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Cosmic Curriculum</title>
 <style>
-  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-  html, body {
-    width: 100%; height: 100%;
-    overflow: hidden;
-    background: #0a0a1a;
-    color: #fff;
-    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-    user-select: none;
-  }
-  #error-msg {
-    position: fixed; inset: 0;
-    display: flex; align-items: center; justify-content: center;
-    color: #fff; font-size: 1.2rem;
-    background: #0a0a1a; z-index: 100;
-    padding: 2rem; text-align: center;
-  }
-  #error-msg.hidden { display: none; }
-  #canvas-container { position: fixed; inset: 0; z-index: 0; }
-  #header {
-    position: fixed; top: 24px; left: 50%; transform: translateX(-50%);
-    z-index: 10; text-align: center; pointer-events: none;
-  }
-  #header h1 {
-    font-size: 1.8rem; font-weight: 300; letter-spacing: 6px;
-    text-transform: uppercase;
-    text-shadow: 0 0 30px rgba(100,180,255,0.3);
-  }
-  #header p { font-size: 0.85rem; opacity: 0.5; letter-spacing: 2px; margin-top: 4px; }
-  #tooltip {
-    position: fixed; z-index: 20;
-    padding: 6px 16px; border-radius: 20px;
-    background: rgba(255,255,255,0.12);
-    backdrop-filter: blur(8px);
-    border: 1px solid rgba(255,255,255,0.15);
-    font-size: 0.85rem; pointer-events: none;
-    opacity: 0; transition: opacity 0.2s; white-space: nowrap;
-  }
-  #tooltip.visible { opacity: 1; }
-  #info-panel {
-    position: fixed; top: 0; right: 0;
-    width: 420px; max-width: 92vw; height: 100vh; z-index: 30;
-    background: rgba(15,15,35,0.65);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    border-left: 1px solid rgba(255,255,255,0.10);
-    box-shadow: -8px 0 40px rgba(0,0,0,0.5);
-    transform: translateX(100%);
-    transition: transform 0.45s cubic-bezier(0.22,1,0.36,1);
-    overflow-y: auto; padding: 2rem 1.8rem;
-  }
-  #info-panel.open { transform: translateX(0); }
-  #info-panel::-webkit-scrollbar { width: 4px; }
-  #info-panel::-webkit-scrollbar-track { background: transparent; }
-  #info-panel::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
-  #panel-close {
-    position: absolute; top: 18px; right: 18px;
-    background: none; border: none; color: rgba(255,255,255,0.5);
-    font-size: 1.6rem; cursor: pointer; transition: color 0.2s; line-height: 1;
-  }
-  #panel-close:hover { color: #fff; }
-  #panel-title {
-    font-size: 1.6rem; font-weight: 300; letter-spacing: 2px;
-    margin-bottom: 1.8rem; padding-bottom: 0.8rem;
-    border-bottom: 1px solid rgba(255,255,255,0.08);
-  }
-  .panel-section { margin-bottom: 1.6rem; }
-  .panel-section h3 {
-    font-size: 0.75rem; font-weight: 600; letter-spacing: 3px;
-    text-transform: uppercase; opacity: 0.5; margin-bottom: 0.6rem;
-  }
-  .panel-section ul { list-style: none; }
-  .panel-section li {
-    padding: 0.5rem 0.75rem; margin-bottom: 4px; border-radius: 8px;
-    background: rgba(255,255,255,0.04);
-    border-left: 2px solid rgba(255,255,255,0.08);
-    font-size: 0.9rem; font-weight: 300; transition: background 0.2s;
-  }
-  .panel-section li:hover { background: rgba(255,255,255,0.08); }
-  .cat-stem   { --cat-color: #00bfff; }
-  .cat-human  { --cat-color: #ff6b35; }
-  .cat-lang   { --cat-color: #00e676; }
-  .cat-econ   { --cat-color: #ffd700; }
-  @media (max-width: 600px) {
-    #header h1 { font-size: 1.1rem; letter-spacing: 3px; }
-    #header p  { font-size: 0.7rem; }
-    #info-panel { width: 100vw; max-width: 100vw; padding: 1.2rem; }
-    #panel-title { font-size: 1.2rem; }
-  }
+  *,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
+  html,body { width:100%; height:100%; overflow:hidden; background:#0a0a1a; color:#fff; font-family:'Segoe UI',system-ui,-apple-system,sans-serif; user-select:none; }
+  #error-msg { position:fixed; inset:0; display:flex; align-items:center; justify-content:center; color:#fff; font-size:1.2rem; background:#0a0a1a; z-index:100; padding:2rem; text-align:center; }
+  #error-msg.hidden { display:none; }
+  #canvas-container { position:fixed; inset:0; z-index:0; }
+  #header { position:fixed; top:24px; left:50%; transform:translateX(-50%); z-index:10; text-align:center; pointer-events:none; }
+  #header h1 { font-size:1.8rem; font-weight:300; letter-spacing:6px; text-transform:uppercase; text-shadow:0 0 30px rgba(100,180,255,0.3); }
+  #header p { font-size:0.85rem; opacity:0.5; letter-spacing:2px; margin-top:4px; }
+  #tooltip { position:fixed; z-index:20; padding:6px 16px; border-radius:20px; background:rgba(255,255,255,0.12); backdrop-filter:blur(8px); border:1px solid rgba(255,255,255,0.15); font-size:0.85rem; pointer-events:none; opacity:0; transition:opacity 0.2s; white-space:nowrap; }
+  #tooltip.visible { opacity:1; }
+  #info-panel { position:fixed; top:0; right:0; width:420px; max-width:92vw; height:100vh; z-index:30; background:rgba(15,15,35,0.65); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); border-left:1px solid rgba(255,255,255,0.10); box-shadow:-8px 0 40px rgba(0,0,0,0.5); transform:translateX(100%); transition:transform 0.45s cubic-bezier(0.22,1,0.36,1); overflow-y:auto; padding:2rem 1.8rem; }
+  #info-panel.open { transform:translateX(0); }
+  #info-panel::-webkit-scrollbar { width:4px; }
+  #info-panel::-webkit-scrollbar-track { background:transparent; }
+  #info-panel::-webkit-scrollbar-thumb { background:rgba(255,255,255,0.2); border-radius:4px; }
+  #panel-close { position:absolute; top:18px; right:18px; background:none; border:none; color:rgba(255,255,255,0.5); font-size:1.6rem; cursor:pointer; transition:color 0.2s; line-height:1; }
+  #panel-close:hover { color:#fff; }
+  #panel-title { font-size:1.6rem; font-weight:300; letter-spacing:2px; margin-bottom:1.8rem; padding-bottom:0.8rem; border-bottom:1px solid rgba(255,255,255,0.08); }
+  .panel-section { margin-bottom:1.6rem; }
+  .panel-section h3 { font-size:0.75rem; font-weight:600; letter-spacing:3px; text-transform:uppercase; opacity:0.5; margin-bottom:0.6rem; }
+  .panel-section ul { list-style:none; }
+  .panel-section li { padding:0.5rem 0.75rem; margin-bottom:4px; border-radius:8px; background:rgba(255,255,255,0.04); border-left:2px solid rgba(255,255,255,0.08); font-size:0.9rem; font-weight:300; transition:background 0.2s; }
+  .panel-section li:hover { background:rgba(255,255,255,0.08); }
+  .cat-stem { --cat-color:#00bfff; } .cat-human { --cat-color:#ff6b35; } .cat-lang { --cat-color:#00e676; } .cat-econ { --cat-color:#ffd700; }
+  @media (max-width:600px) { #header h1 { font-size:1.1rem; letter-spacing:3px; } #header p { font-size:0.7rem; } #info-panel { width:100vw; max-width:100vw; padding:1.2rem; } #panel-title { font-size:1.2rem; } }
 </style>
 </head>
 <body>
-
 <div id="error-msg">Loading Cosmic Curriculum&hellip;</div>
-
-<div id="header">
-  <h1>&#10022; Cosmic Curriculum</h1>
-  <p>Click a star to explore</p>
-</div>
+<div id="header"><h1>&#10022; Cosmic Curriculum</h1><p>Click a star to explore</p></div>
 <div id="tooltip"></div>
 <div id="canvas-container"></div>
 <div id="info-panel">
@@ -133,346 +57,188 @@ HTML = """<!DOCTYPE html>
     <div class="panel-section"><h3>University Topics</h3><ul id="panel-uni"></ul></div>
   </div>
 </div>
-
-<script src="https://cdn.jsdelivr.net/npm/three@0.149.0/build/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.149.0/examples/js/controls/OrbitControls.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.149.0/examples/js/renderers/CSS2DRenderer.js"></script>
 <script>
-(function() {
-  var errorEl = document.getElementById('error-msg');
+(async function() {
+  const errorEl = document.getElementById('error-msg');
+  try {
+    const THREE = await import('https://cdn.jsdelivr.net/npm/three@0.163.0/build/three.module.js');
+    const { OrbitControls } = await import('https://cdn.jsdelivr.net/npm/three@0.163.0/examples/jsm/controls/OrbitControls.js');
+    const { CSS2DRenderer, CSS2DObject } = await import('https://cdn.jsdelivr.net/npm/three@0.163.0/examples/jsm/renderers/CSS2DRenderer.js');
 
-  if (typeof THREE === 'undefined') {
-    errorEl.innerHTML = 'Failed to load 3D library. Please check your internet connection.';
-    return;
-  }
+    const CATEGORIES = { stem:{label:'STEM',color:'#00bfff',cssClass:'cat-stem'}, human:{label:'Humanities',color:'#ff6b35',cssClass:'cat-human'}, lang:{label:'Languages',color:'#00e676',cssClass:'cat-lang'}, econ:{label:'Economics & Law',color:'#ffd700',cssClass:'cat-econ'} };
+    const SUBJECTS = [
+      { id:'math',name:'Mathematics',category:'stem',pos:[0,0.5,7], school:['Algebra','Geometry','Trigonometry','Calculus Basics','Statistics'], uni:['Real Analysis','Abstract Algebra','Topology','Differential Geometry','Number Theory'] },
+      { id:'physics',name:'Physics',category:'stem',pos:[5.5,1.2,3.5], school:['Mechanics','Thermodynamics','Optics','Electricity & Magnetism'], uni:['Quantum Mechanics','Relativity','Statistical Mechanics','Particle Physics','Astrophysics'] },
+      { id:'chemistry',name:'Chemistry',category:'stem',pos:[-5.5,-1.2,3.5], school:['Atomic Structure','Bonding','Stoichiometry','Organic Basics'], uni:['Quantum Chemistry','Spectroscopy','Polymer Chemistry','Biochemistry'] },
+      { id:'german',name:'German',category:'human',pos:[-4.5,2,-4], school:['Grammar','Text Analysis','Essay Writing','Literature'], uni:['German Linguistics','Medieval Literature','Comparative Literature','Philology'] },
+      { id:'history',name:'History',category:'human',pos:[0,-2.2,-6.5], school:['Ancient Civilizations','Medieval','Modern','World Wars'], uni:['Historiography','Economic History','Cultural History','Historical Methods'] },
+      { id:'philosophy',name:'Philosophy',category:'human',pos:[4.5,1.8,-4.5], school:['Logic','Ethics','Political Philosophy','Epistemology'], uni:['Metaphysics','Philosophy of Mind','Continental','Analytic Philosophy'] },
+      { id:'english',name:'English',category:'lang',pos:[6,-0.6,-1.5], school:['Comprehension','Creative Writing','Grammar','Literary Analysis'], uni:['English Linguistics','Shakespeare','Postcolonial Literature','Critical Theory'] },
+      { id:'french',name:'French',category:'lang',pos:[-6,0.8,-1], school:['Vocabulary & Grammar','Conversation','Culture','Literature'], uni:['French Linguistics','Francophone Studies','French Philosophy','Translation'] },
+      { id:'spanish',name:'Spanish',category:'lang',pos:[1.5,3.8,-5], school:['Vocabulary & Grammar','Conversation','Culture','Literature'], uni:['Spanish Linguistics','Latin American Studies','Bilingualism','Translation'] },
+      { id:'business',name:'Business',category:'econ',pos:[-2,-2.8,5.5], school:['Business Basics','Marketing','Accounting','Entrepreneurship'], uni:['Corporate Strategy','Organizational Behaviour','Supply Chain','Business Ethics'] },
+      { id:'economics',name:'Economics',category:'econ',pos:[3.5,-2.5,3], school:['Supply & Demand','Market Structures','Macroeconomics','Personal Finance'], uni:['Microeconomic Theory','Econometrics','Game Theory','Development Economics'] },
+      { id:'law',name:'Law',category:'econ',pos:[-3,-1.5,-5], school:['Constitutional Basics','Criminal Law','Civil Law','Legal Reasoning'], uni:['Jurisprudence','International Law','Contract Law','Constitutional Theory'] },
+    ];
 
-  var CATEGORIES = {
-    stem: { label: 'STEM & Natural Sciences', color: '#00bfff', cssClass: 'cat-stem' },
-    human: { label: 'Humanities',             color: '#ff6b35', cssClass: 'cat-human' },
-    lang:  { label: 'Foreign Languages',       color: '#00e676', cssClass: 'cat-lang'  },
-    econ:  { label: 'Economics & Law',         color: '#ffd700', cssClass: 'cat-econ'  },
-  };
-  var SUBJECTS = [
-    { id: 'math',      name: 'Mathematics', category: 'stem', pos: [0,0.5,7],
-      school: ['Arithmetic & Number Theory','Algebra','Geometry & Trigonometry','Calculus Basics','Probability & Statistics'],
-      uni: ['Real Analysis','Abstract Algebra','Topology','Differential Geometry','Number Theory'] },
-    { id: 'physics',   name: 'Physics', category: 'stem', pos: [5.5,1.2,3.5],
-      school: ['Mechanics','Thermodynamics','Optics & Waves','Electricity & Magnetism'],
-      uni: ['Quantum Mechanics','Relativity','Statistical Mechanics','Particle Physics','Astrophysics'] },
-    { id: 'chemistry', name: 'Chemistry', category: 'stem', pos: [-5.5,-1.2,3.5],
-      school: ['Atomic Structure','Chemical Bonding','Stoichiometry','Organic Chemistry Basics'],
-      uni: ['Quantum Chemistry','Spectroscopy','Polymer Chemistry','Biochemistry','Computational Chemistry'] },
-    { id: 'german',    name: 'German', category: 'human', pos: [-4.5,2,-4],
-      school: ['Grammar & Syntax','Text Analysis','Essay Writing','German Literature'],
-      uni: ['German Linguistics',' Medieval Literature','Comparative Literature','German Philology'] },
-    { id: 'history',   name: 'History', category: 'human', pos: [0,-2.2,-6.5],
-      school: ['Ancient Civilizations','Medieval History','Modern History','World Wars & Cold War'],
-      uni: ['Historiography','Economic History','Cultural History','Historical Methods','Global History'] },
-    { id: 'philosophy', name: 'Philosophy', category: 'human', pos: [4.5,1.8,-4.5],
-      school: ['Logic & Reasoning','Ethics','Political Philosophy','Epistemology Basics'],
-      uni: ['Metaphysics','Philosophy of Mind','Continental Philosophy','Analytic Philosophy','Philosophy of Science'] },
-    { id: 'english',   name: 'English', category: 'lang', pos: [6,-0.6,-1.5],
-      school: ['Reading Comprehension','Creative Writing','Grammar & Style','Literary Analysis'],
-      uni: ['English Linguistics','Shakespeare Studies','Postcolonial Literature','Critical Theory','Rhetoric'] },
-    { id: 'french',    name: 'French', category: 'lang', pos: [-6,0.8,-1],
-      school: ['Vocabulary & Grammar','Conversation','French Culture','French Literature'],
-      uni: ['French Linguistics','Francophone Studies','French Philosophy','Translation Studies'] },
-    { id: 'spanish',   name: 'Spanish', category: 'lang', pos: [1.5,3.8,-5],
-      school: ['Vocabulary & Grammar','Conversation','Latin American Culture','Spanish Literature'],
-      uni: ['Spanish Linguistics',' Latin American Studies','Bilingualism','Translation Studies','Hispanic Literature'] },
-    { id: 'business',  name: 'Business', category: 'econ', pos: [-2,-2.8,5.5],
-      school: ['Business Basics','Marketing','Accounting','Entrepreneurship'],
-      uni: ['Corporate Strategy','Organizational Behaviour','Supply Chain Management','Business Ethics','Innovation Management'] },
-    { id: 'economics', name: 'Economics', category: 'econ', pos: [3.5,-2.5,3],
-      school: ['Supply & Demand','Market Structures','Macroeconomics','Personal Finance'],
-      uni: ['Microeconomic Theory','Econometrics','Game Theory','Development Economics','Behavioural Economics'] },
-    { id: 'law',       name: 'Law', category: 'econ', pos: [-3,-1.5,-5],
-      school: ['Constitutional Basics','Criminal Law','Civil Law','Legal Reasoning'],
-      uni: ['Jurisprudence','International Law','Contract Law','Constitutional Theory','Criminal Justice'] },
-  ];
-
-  var container = document.getElementById('canvas-container');
-  var scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x070714);
-
-  var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 500);
-  camera.position.set(0, 4, 16);
-
-  var renderer = new THREE.WebGLRenderer({ antialias: true });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.2;
-  container.appendChild(renderer.domElement);
-
-  var labelRenderer = new THREE.CSS2DRenderer();
-  labelRenderer.setSize(window.innerWidth, window.innerHeight);
-  labelRenderer.domElement.style.position = 'absolute';
-  labelRenderer.domElement.style.top = '0';
-  labelRenderer.domElement.style.left = '0';
-  labelRenderer.domElement.style.pointerEvents = 'none';
-  container.appendChild(labelRenderer.domElement);
-
-  var controls = new THREE.OrbitControls(camera, renderer.domElement);
-  controls.enableDamping = true;
-  controls.dampingFactor = 0.08;
-  controls.minDistance = 3;
-  controls.maxDistance = 40;
-  controls.autoRotate = true;
-  controls.autoRotateSpeed = 0.6;
-
-  scene.add(new THREE.AmbientLight(0x222244, 0.6));
-  var dl = new THREE.DirectionalLight(0xffffff, 1.2);
-  dl.position.set(5, 10, 7);
-  scene.add(dl);
-  var bl = new THREE.DirectionalLight(0x6688ff, 0.4);
-  bl.position.set(-5, -5, -10);
-  scene.add(bl);
-
-  function createStarField() {
-    var count = 3000;
-    var positions = new Float32Array(count * 3);
-    for (var i = 0; i < count; i++) {
-      var r = 50 + Math.random() * 150;
-      var theta = Math.random() * Math.PI * 2;
-      var phi = Math.acos(2 * Math.random() - 1);
-      positions[i*3]   = r * Math.sin(phi) * Math.cos(theta);
-      positions[i*3+1] = r * Math.sin(phi) * Math.sin(theta);
-      positions[i*3+2] = r * Math.cos(phi);
-    }
-    var geo = new THREE.BufferGeometry();
-    geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-    var mat = new THREE.PointsMaterial({ color: 0xffffff, size: 0.25, sizeAttenuation: true, transparent: true, opacity: 0.8 });
-    var stars = new THREE.Points(geo, mat);
-    scene.add(stars);
-    return stars;
-  }
-  var starField = createStarField();
-
-  function makeGlowTexture() {
-    var c = document.createElement('canvas');
-    c.width = 256; c.height = 256;
-    var ctx = c.getContext('2d');
-    var grad = ctx.createRadialGradient(128, 128, 0, 128, 128, 128);
-    grad.addColorStop(0,   'rgba(255,255,255,1)');
-    grad.addColorStop(0.15,'rgba(255,255,255,0.9)');
-    grad.addColorStop(0.4, 'rgba(255,255,255,0.3)');
-    grad.addColorStop(0.7, 'rgba(255,255,255,0.08)');
-    grad.addColorStop(1,   'rgba(255,255,255,0)');
-    ctx.fillStyle = grad;
-    ctx.fillRect(0, 0, 256, 256);
-    return new THREE.CanvasTexture(c);
-  }
-  var glowTexture = makeGlowTexture();
-
-  var starMeshes = [];
-  var starObjects = [];
-
-  SUBJECTS.forEach(function(s, index) {
-    var cat = CATEGORIES[s.category];
-    var color = new THREE.Color(cat.color);
-
-    var geo = new THREE.SphereGeometry(0.6, 32, 32);
-    var mat = new THREE.MeshStandardMaterial({ color: color, emissive: color, emissiveIntensity: 0.3, roughness: 0.2, metalness: 0.1 });
-    var mesh = new THREE.Mesh(geo, mat);
-    mesh.position.set(s.pos[0], s.pos[1], s.pos[2]);
-    mesh.userData.subjectIndex = index;
-    scene.add(mesh);
-    starMeshes.push(mesh);
-
-    var glowMat = new THREE.SpriteMaterial({ map: glowTexture, color: color, transparent: true, blending: THREE.AdditiveBlending, opacity: 0.45, depthWrite: false });
-    var glow = new THREE.Sprite(glowMat);
-    glow.scale.set(3.2, 3.2, 1);
-    glow.position.set(s.pos[0], s.pos[1], s.pos[2]);
-    scene.add(glow);
-
-    var labelDiv = document.createElement('div');
-    labelDiv.textContent = s.name;
-    labelDiv.style.cssText = 'color:#fff;font-size:14px;font-weight:400;letter-spacing:1px;text-shadow:0 0 20px ' + cat.color + ',0 0 60px ' + cat.color + ';background:rgba(0,0,0,0.35);padding:4px 14px;border-radius:12px;border:1px solid ' + cat.color + '44;backdrop-filter:blur(4px);pointer-events:none;';
-    var label = new THREE.CSS2DObject(labelDiv);
-    label.position.set(s.pos[0], s.pos[1] - 1.2, s.pos[2]);
-    scene.add(label);
-
-    starObjects.push({ mesh: mesh, glow: glow, label: label, data: s, meshMat: mat, glowMat: glowMat });
-  });
-
-  var raycaster = new THREE.Raycaster();
-  var pointer = new THREE.Vector2();
-  var hoveredIndex = -1;
-  var selectedIndex = -1;
-  var tooltipEl = document.getElementById('tooltip');
-  var panel = document.getElementById('info-panel');
-  var panelTitle = document.getElementById('panel-title');
-  var panelSchool = document.getElementById('panel-school');
-  var panelUni = document.getElementById('panel-uni');
-
-  function clearHover() {
-    if (hoveredIndex >= 0) {
-      var obj = starObjects[hoveredIndex];
-      obj.meshMat.emissiveIntensity = 0.3;
-      obj.glowMat.opacity = 0.45;
-    }
-    hoveredIndex = -1;
-  }
-
-  function closePanel() {
-    panel.classList.remove('open');
-    panel.className = '';
-    selectedIndex = -1;
+    const container = document.getElementById('canvas-container');
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x070714);
+    const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 500);
+    camera.position.set(0, 4, 16);
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.2;
+    container.appendChild(renderer.domElement);
+    const labelRenderer = new CSS2DRenderer();
+    labelRenderer.setSize(window.innerWidth, window.innerHeight);
+    labelRenderer.domElement.style.position = 'absolute';
+    labelRenderer.domElement.style.top = '0';
+    labelRenderer.domElement.style.left = '0';
+    labelRenderer.domElement.style.pointerEvents = 'none';
+    container.appendChild(labelRenderer.domElement);
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.08;
+    controls.minDistance = 3;
+    controls.maxDistance = 40;
     controls.autoRotate = true;
-  }
+    controls.autoRotateSpeed = 0.6;
+    scene.add(new THREE.AmbientLight(0x222244, 0.6));
+    const dl = new THREE.DirectionalLight(0xffffff, 1.2);
+    dl.position.set(5, 10, 7);
+    scene.add(dl);
+    const bl = new THREE.DirectionalLight(0x6688ff, 0.4);
+    bl.position.set(-5, -5, -10);
+    scene.add(bl);
 
-  function openPanel(idx) {
-    var s = SUBJECTS[idx];
-    var cat = CATEGORIES[s.category];
-    panelTitle.textContent = s.name;
-    panelTitle.style.borderBottomColor = cat.color;
-    panel.className = 'open ' + cat.cssClass;
-    panelSchool.innerHTML = '';
-    s.school.forEach(function(topic) {
-      var li = document.createElement('li');
-      li.textContent = topic;
-      li.style.borderLeftColor = cat.color;
-      panelSchool.appendChild(li);
-    });
-    panelUni.innerHTML = '';
-    s.uni.forEach(function(topic) {
-      var li = document.createElement('li');
-      li.textContent = topic;
-      li.style.borderLeftColor = cat.color;
-      panelUni.appendChild(li);
-    });
-  }
-
-  function onPointerMove(event) {
-    var rect = renderer.domElement.getBoundingClientRect();
-    pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
-    pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
-    raycaster.setFromCamera(pointer, camera);
-    var intersects = raycaster.intersectObjects(starMeshes);
-    if (intersects.length > 0) {
-      var idx = intersects[0].object.userData.subjectIndex;
-      if (idx !== undefined && idx !== hoveredIndex) {
-        clearHover();
-        hoveredIndex = idx;
-        var obj = starObjects[idx];
-        obj.meshMat.emissiveIntensity = 0.8;
-        obj.glowMat.opacity = 0.8;
+    (function() {
+      const count = 3000;
+      const positions = new Float32Array(count * 3);
+      for (let i = 0; i < count; i++) {
+        const r = 50 + Math.random() * 150;
+        const theta = Math.random() * Math.PI * 2;
+        const phi = Math.acos(2 * Math.random() - 1);
+        positions[i*3] = r * Math.sin(phi) * Math.cos(theta);
+        positions[i*3+1] = r * Math.sin(phi) * Math.sin(theta);
+        positions[i*3+2] = r * Math.cos(phi);
       }
-      renderer.domElement.style.cursor = 'pointer';
-      var s = SUBJECTS[idx];
-      tooltipEl.textContent = s.name;
-      tooltipEl.style.left = (event.clientX + 14) + 'px';
-      tooltipEl.style.top = (event.clientY - 10) + 'px';
-      tooltipEl.classList.add('visible');
-    } else {
-      if (hoveredIndex >= 0) clearHover();
-      renderer.domElement.style.cursor = 'default';
-      tooltipEl.classList.remove('visible');
-    }
-  }
+      const geo = new THREE.BufferGeometry();
+      geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+      scene.add(new THREE.Points(geo, new THREE.PointsMaterial({ color: 0xffffff, size: 0.25, sizeAttenuation: true, transparent: true, opacity: 0.8 })));
+    })();
 
-  var isAnimating = false;
-  function selectStar(idx) {
-    if (isAnimating) return;
-    selectedIndex = idx;
-    var obj = starObjects[idx];
-    var pos = obj.mesh.position.clone();
-    var startPos = camera.position.clone();
-    var startTarget = controls.target.clone();
-    var endTarget = pos.clone();
-    var dir = pos.clone().normalize();
-    var endPos = pos.clone().add(dir.clone().multiplyScalar(-3.5));
-    endPos.y += 1.2;
-    isAnimating = true;
-    controls.enabled = false;
-    controls.autoRotate = false;
-    var duration = 900;
-    var startTime = performance.now();
-    function animStep() {
-      var t = Math.min((performance.now() - startTime) / duration, 1);
-      var e = 1 - Math.pow(1 - t, 3);
-      camera.position.lerpVectors(startPos, endPos, e);
-      controls.target.lerpVectors(startTarget, endTarget, e);
-      controls.update();
-      if (t < 1) requestAnimationFrame(animStep);
-      else { isAnimating = false; controls.enabled = true; openPanel(idx); }
-    }
-    animStep();
-  }
+    const glowTex = (function() {
+      const c = document.createElement('canvas'); c.width = 256; c.height = 256;
+      const ctx = c.getContext('2d');
+      const g = ctx.createRadialGradient(128, 128, 0, 128, 128, 128);
+      g.addColorStop(0,'rgba(255,255,255,1)'); g.addColorStop(0.15,'rgba(255,255,255,0.9)'); g.addColorStop(0.4,'rgba(255,255,255,0.3)'); g.addColorStop(0.7,'rgba(255,255,255,0.08)'); g.addColorStop(1,'rgba(255,255,255,0)');
+      ctx.fillStyle = g; ctx.fillRect(0, 0, 256, 256);
+      return new THREE.CanvasTexture(c);
+    })();
 
-  function onClick(event) {
-    if (panel.classList.contains('open')) {
-      var r = panel.getBoundingClientRect();
-      if (event.clientX < r.left) { closePanel(); return; }
-    }
-    var rect = renderer.domElement.getBoundingClientRect();
-    pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
-    pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
-    raycaster.setFromCamera(pointer, camera);
-    var intersects = raycaster.intersectObjects(starMeshes);
-    if (intersects.length > 0) {
-      var idx = intersects[0].object.userData.subjectIndex;
-      if (idx !== undefined) selectStar(idx);
-    }
-  }
-
-  document.getElementById('panel-close').addEventListener('click', closePanel);
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape' && panel.classList.contains('open')) closePanel();
-  });
-  renderer.domElement.addEventListener('pointermove', onPointerMove);
-  renderer.domElement.addEventListener('click', onClick);
-
-  var clock = new THREE.Clock();
-  function animate() {
-    requestAnimationFrame(animate);
-    var elapsed = clock.getElapsedTime();
-
-    starField.rotation.y = elapsed * 0.004;
-    starField.rotation.x = Math.sin(elapsed * 0.002) * 0.02;
-
-    starObjects.forEach(function(obj, i) {
-      obj.mesh.rotation.y += 0.008;
-      obj.mesh.rotation.x += 0.003;
-      var offset = i * 0.5;
-      var floatY = Math.sin(elapsed * 0.3 + offset) * 0.06;
-      var baseY = obj.data.pos[1];
-      obj.mesh.position.y = baseY + floatY;
-      obj.glow.position.y = baseY + floatY;
-      obj.label.position.y = baseY - 1.2 + floatY;
-
-      if (i === hoveredIndex) {
-        var pulse = 1 + Math.sin(elapsed * 3 + offset) * 0.08;
-        obj.mesh.scale.setScalar(1.2 + (pulse - 1));
-        obj.glowMat.opacity = 0.7 + Math.sin(elapsed * 2.5 + offset) * 0.15;
-      } else if (i !== selectedIndex || !panel.classList.contains('open')) {
-        obj.mesh.scale.setScalar(1);
-      }
-      if (i === selectedIndex && panel.classList.contains('open')) {
-        obj.mesh.scale.setScalar(1 + Math.sin(elapsed * 2 + offset) * 0.05);
-        obj.meshMat.emissiveIntensity = 0.6 + Math.sin(elapsed * 2.5) * 0.2;
-      }
+    const starMeshes = [], starObjs = [];
+    SUBJECTS.forEach((s, i) => {
+      const cat = CATEGORIES[s.category];
+      const col = new THREE.Color(cat.color);
+      const mesh = new THREE.Mesh(new THREE.SphereGeometry(0.6, 32, 32), new THREE.MeshStandardMaterial({ color: col, emissive: col, emissiveIntensity: 0.3, roughness: 0.2, metalness: 0.1 }));
+      mesh.position.set(s.pos[0], s.pos[1], s.pos[2]);
+      mesh.userData.subjectIndex = i;
+      scene.add(mesh);
+      starMeshes.push(mesh);
+      const glow = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, color: col, transparent: true, blending: THREE.AdditiveBlending, opacity: 0.45, depthWrite: false }));
+      glow.scale.set(3.2, 3.2, 1);
+      glow.position.set(s.pos[0], s.pos[1], s.pos[2]);
+      scene.add(glow);
+      const div = document.createElement('div');
+      div.textContent = s.name;
+      div.style.cssText = 'color:#fff;font-size:14px;font-weight:400;letter-spacing:1px;text-shadow:0 0 20px ' + cat.color + ',0 0 60px ' + cat.color + ';background:rgba(0,0,0,0.35);padding:4px 14px;border-radius:12px;border:1px solid ' + cat.color + '44;backdrop-filter:blur(4px);pointer-events:none;';
+      const label = new CSS2DObject(div);
+      label.position.set(s.pos[0], s.pos[1] - 1.2, s.pos[2]);
+      scene.add(label);
+      starObjs.push({ mesh, glow, label, data: s, meshMat: mesh.material, glowMat: glow.material });
     });
 
-    controls.update();
-    renderer.render(scene, camera);
-    labelRenderer.render(scene, camera);
-  }
+    const raycaster = new THREE.Raycaster(), pointer = new THREE.Vector2();
+    let hover = -1, selected = -1;
+    const tooltip = document.getElementById('tooltip'), panel = document.getElementById('info-panel');
+    const pTitle = document.getElementById('panel-title'), pSchool = document.getElementById('panel-school'), pUni = document.getElementById('panel-uni');
 
-  function onResize() {
-    var w = window.innerWidth;
-    var h = window.innerHeight;
-    camera.aspect = w / h;
-    camera.updateProjectionMatrix();
-    renderer.setSize(w, h);
-    labelRenderer.setSize(w, h);
-  }
-  window.addEventListener('resize', onResize);
+    function clearHover() { if (hover >= 0) { const o = starObjs[hover]; o.meshMat.emissiveIntensity = 0.3; o.glowMat.opacity = 0.45; } hover = -1; }
+    function closeP() { panel.classList.remove('open'); panel.className = ''; selected = -1; controls.autoRotate = true; }
+    function openP(idx) {
+      const s = SUBJECTS[idx], c = CATEGORIES[s.category];
+      pTitle.textContent = s.name; pTitle.style.borderBottomColor = c.color;
+      panel.className = 'open ' + c.cssClass;
+      pSchool.innerHTML = ''; s.school.forEach(t => { const l = document.createElement('li'); l.textContent = t; l.style.borderLeftColor = c.color; pSchool.appendChild(l); });
+      pUni.innerHTML = ''; s.uni.forEach(t => { const l = document.createElement('li'); l.textContent = t; l.style.borderLeftColor = c.color; pUni.appendChild(l); });
+    }
 
-  errorEl.classList.add('hidden');
-  animate();
-  console.log('Cosmic Curriculum loaded!');
+    renderer.domElement.addEventListener('pointermove', e => {
+      const r = renderer.domElement.getBoundingClientRect();
+      pointer.x = ((e.clientX - r.left) / r.width) * 2 - 1;
+      pointer.y = -((e.clientY - r.top) / r.height) * 2 + 1;
+      raycaster.setFromCamera(pointer, camera);
+      const hits = raycaster.intersectObjects(starMeshes);
+      if (hits.length > 0) {
+        const idx = hits[0].object.userData.subjectIndex;
+        if (idx !== undefined && idx !== hover) { clearHover(); hover = idx; const o = starObjs[idx]; o.meshMat.emissiveIntensity = 0.8; o.glowMat.opacity = 0.8; }
+        renderer.domElement.style.cursor = 'pointer';
+        tooltip.textContent = SUBJECTS[idx].name;
+        tooltip.style.left = (e.clientX + 14) + 'px'; tooltip.style.top = (e.clientY - 10) + 'px';
+        tooltip.classList.add('visible');
+      } else { if (hover >= 0) clearHover(); renderer.domElement.style.cursor = 'default'; tooltip.classList.remove('visible'); }
+    });
+
+    let animating = false;
+    renderer.domElement.addEventListener('click', e => {
+      if (panel.classList.contains('open')) { const r = panel.getBoundingClientRect(); if (e.clientX < r.left) { closeP(); return; } }
+      const r = renderer.domElement.getBoundingClientRect();
+      pointer.x = ((e.clientX - r.left) / r.width) * 2 - 1;
+      pointer.y = -((e.clientY - r.top) / r.height) * 2 + 1;
+      raycaster.setFromCamera(pointer, camera);
+      const hits = raycaster.intersectObjects(starMeshes);
+      if (hits.length > 0) { const idx = hits[0].object.userData.subjectIndex; if (idx !== undefined) selectStar(idx); }
+    });
+
+    function selectStar(idx) {
+      if (animating) return;
+      selected = idx;
+      const o = starObjs[idx], p = o.mesh.position.clone();
+      const sp = camera.position.clone(), st = controls.target.clone(), et = p.clone();
+      const ep = p.clone().add(p.clone().normalize().multiplyScalar(-3.5)); ep.y += 1.2;
+      animating = true; controls.enabled = false; controls.autoRotate = false;
+      const dur = 900, sTime = performance.now();
+      (function step() { const t = Math.min((performance.now() - sTime) / dur, 1), e = 1 - Math.pow(1 - t, 3); camera.position.lerpVectors(sp, ep, e); controls.target.lerpVectors(st, et, e); controls.update(); if (t < 1) requestAnimationFrame(step); else { animating = false; controls.enabled = true; openP(idx); } })();
+    }
+
+    document.getElementById('panel-close').addEventListener('click', closeP);
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && panel.classList.contains('open')) closeP(); });
+
+    const starField = scene.children.find(c => c.isPoints);
+    const clock = new THREE.Clock();
+    function animate() {
+      requestAnimationFrame(animate);
+      const t = clock.getElapsedTime();
+      starField.rotation.y = t * 0.004; starField.rotation.x = Math.sin(t * 0.002) * 0.02;
+      starObjs.forEach((o, i) => {
+        o.mesh.rotation.y += 0.008; o.mesh.rotation.x += 0.003;
+        const off = i * 0.5, fy = Math.sin(t * 0.3 + off) * 0.06, by = o.data.pos[1];
+        o.mesh.position.y = by + fy; o.glow.position.y = by + fy; o.label.position.y = by - 1.2 + fy;
+        if (i === hover) { o.mesh.scale.setScalar(1.2 + Math.sin(t * 3 + off) * 0.08); o.glowMat.opacity = 0.7 + Math.sin(t * 2.5 + off) * 0.15; }
+        else if (i !== selected || !panel.classList.contains('open')) o.mesh.scale.setScalar(1);
+        if (i === selected && panel.classList.contains('open')) { o.mesh.scale.setScalar(1 + Math.sin(t * 2 + off) * 0.05); o.meshMat.emissiveIntensity = 0.6 + Math.sin(t * 2.5) * 0.2; }
+      });
+      controls.update(); renderer.render(scene, camera); labelRenderer.render(scene, camera);
+    }
+
+    window.addEventListener('resize', () => { const w = window.innerWidth, h = window.innerHeight; camera.aspect = w / h; camera.updateProjectionMatrix(); renderer.setSize(w, h); labelRenderer.setSize(w, h); });
+
+    errorEl.classList.add('hidden');
+    animate();
+  } catch (err) { errorEl.textContent = 'Error: ' + err.message; console.error(err); }
 })();
 </script>
 </body>
