@@ -1,4 +1,5 @@
 import streamlit as st
+import base64
 
 st.set_page_config(page_title="Cosmic Curriculum", page_icon="✨", layout="wide", initial_sidebar_state="collapsed")
 
@@ -244,4 +245,5 @@ HTML = """<!DOCTYPE html>
 </body>
 </html>"""
 
-st.components.v1.html(HTML, height=900, scrolling=False)
+encoded = base64.b64encode(HTML.encode()).decode()
+st.iframe(f"data:text/html;base64,{encoded}", height=900, scrolling=False)
