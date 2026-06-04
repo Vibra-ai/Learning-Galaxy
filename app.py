@@ -1,6 +1,11 @@
-from flask import Flask
+import streamlit as st
 
-app = Flask(__name__)
+st.set_page_config(
+    page_title="Cosmic Curriculum",
+    page_icon="✨",
+    layout="wide",
+    initial_sidebar_state="collapsed",
+)
 
 HTML = """<!DOCTYPE html>
 <html lang="en">
@@ -469,9 +474,4 @@ HTML = """<!DOCTYPE html>
 </body>
 </html>"""
 
-@app.route("/")
-def index():
-    return HTML
-
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8080)
+st.markdown(HTML, unsafe_allow_html=True)
