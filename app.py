@@ -246,4 +246,4 @@ HTML = """<!DOCTYPE html>
 </html>"""
 
 encoded = base64.b64encode(HTML.encode()).decode()
-st.iframe(f"data:text/html;base64,{encoded}", height=900, scrolling=False)
+st.iframe(f"data:text/html;base64,{encoded}", height=900)
