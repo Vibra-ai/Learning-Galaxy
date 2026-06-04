@@ -58,188 +58,175 @@ HTML = """<!DOCTYPE html>
     <div class="panel-section"><h3>University Topics</h3><ul id="panel-uni"></ul></div>
   </div>
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/renderers/CSS2DRenderer.js"></script>
 <script>
-(async function() {
-  const errorEl = document.getElementById('error-msg');
-  try {
-    const THREE = await import('https://cdn.jsdelivr.net/npm/three@0.163.0/build/three.module.js');
-    const { OrbitControls } = await import('https://cdn.jsdelivr.net/npm/three@0.163.0/examples/jsm/controls/OrbitControls.js');
-    const { CSS2DRenderer, CSS2DObject } = await import('https://cdn.jsdelivr.net/npm/three@0.163.0/examples/jsm/renderers/CSS2DRenderer.js');
+(function() {
+  var errorEl = document.getElementById('error-msg');
+  if (typeof THREE === 'undefined') { errorEl.textContent = 'Failed to load 3D library. Check internet.'; return; }
 
-    const CATEGORIES = { stem:{label:'STEM',color:'#00bfff',cssClass:'cat-stem'}, human:{label:'Humanities',color:'#ff6b35',cssClass:'cat-human'}, lang:{label:'Languages',color:'#00e676',cssClass:'cat-lang'}, econ:{label:'Economics & Law',color:'#ffd700',cssClass:'cat-econ'} };
-    const SUBJECTS = [
-      { id:'math',name:'Mathematics',category:'stem',pos:[0,0.5,7], school:['Algebra','Geometry','Trigonometry','Calculus Basics','Statistics'], uni:['Real Analysis','Abstract Algebra','Topology','Differential Geometry','Number Theory'] },
-      { id:'physics',name:'Physics',category:'stem',pos:[5.5,1.2,3.5], school:['Mechanics','Thermodynamics','Optics','Electricity & Magnetism'], uni:['Quantum Mechanics','Relativity','Statistical Mechanics','Particle Physics','Astrophysics'] },
-      { id:'chemistry',name:'Chemistry',category:'stem',pos:[-5.5,-1.2,3.5], school:['Atomic Structure','Bonding','Stoichiometry','Organic Basics'], uni:['Quantum Chemistry','Spectroscopy','Polymer Chemistry','Biochemistry'] },
-      { id:'german',name:'German',category:'human',pos:[-4.5,2,-4], school:['Grammar','Text Analysis','Essay Writing','Literature'], uni:['German Linguistics','Medieval Literature','Comparative Literature','Philology'] },
-      { id:'history',name:'History',category:'human',pos:[0,-2.2,-6.5], school:['Ancient Civilizations','Medieval','Modern','World Wars'], uni:['Historiography','Economic History','Cultural History','Historical Methods'] },
-      { id:'philosophy',name:'Philosophy',category:'human',pos:[4.5,1.8,-4.5], school:['Logic','Ethics','Political Philosophy','Epistemology'], uni:['Metaphysics','Philosophy of Mind','Continental','Analytic Philosophy'] },
-      { id:'english',name:'English',category:'lang',pos:[6,-0.6,-1.5], school:['Comprehension','Creative Writing','Grammar','Literary Analysis'], uni:['English Linguistics','Shakespeare','Postcolonial Literature','Critical Theory'] },
-      { id:'french',name:'French',category:'lang',pos:[-6,0.8,-1], school:['Vocabulary & Grammar','Conversation','Culture','Literature'], uni:['French Linguistics','Francophone Studies','French Philosophy','Translation'] },
-      { id:'spanish',name:'Spanish',category:'lang',pos:[1.5,3.8,-5], school:['Vocabulary & Grammar','Conversation','Culture','Literature'], uni:['Spanish Linguistics','Latin American Studies','Bilingualism','Translation'] },
-      { id:'business',name:'Business',category:'econ',pos:[-2,-2.8,5.5], school:['Business Basics','Marketing','Accounting','Entrepreneurship'], uni:['Corporate Strategy','Organizational Behaviour','Supply Chain','Business Ethics'] },
-      { id:'economics',name:'Economics',category:'econ',pos:[3.5,-2.5,3], school:['Supply & Demand','Market Structures','Macroeconomics','Personal Finance'], uni:['Microeconomic Theory','Econometrics','Game Theory','Development Economics'] },
-      { id:'law',name:'Law',category:'econ',pos:[-3,-1.5,-5], school:['Constitutional Basics','Criminal Law','Civil Law','Legal Reasoning'], uni:['Jurisprudence','International Law','Contract Law','Constitutional Theory'] },
-    ];
+  var CATEGORIES = { stem:{label:'STEM',color:'#00bfff',cssClass:'cat-stem'}, human:{label:'Humanities',color:'#ff6b35',cssClass:'cat-human'}, lang:{label:'Languages',color:'#00e676',cssClass:'cat-lang'}, econ:{label:'Economics & Law',color:'#ffd700',cssClass:'cat-econ'} };
+  var SUBJECTS = [
+    { id:'math',name:'Mathematics',category:'stem',pos:[0,0.5,7], school:['Algebra','Geometry','Trigonometry','Calculus','Statistics'], uni:['Real Analysis','Abstract Algebra','Topology','Differential Geometry','Number Theory'] },
+    { id:'physics',name:'Physics',category:'stem',pos:[5.5,1.2,3.5], school:['Mechanics','Thermodynamics','Optics','Electricity & Magnetism'], uni:['Quantum Mechanics','Relativity','Statistical Mechanics','Particle Physics','Astrophysics'] },
+    { id:'chemistry',name:'Chemistry',category:'stem',pos:[-5.5,-1.2,3.5], school:['Atomic Structure','Bonding','Stoichiometry','Organic Basics'], uni:['Quantum Chemistry','Spectroscopy','Polymer Chemistry','Biochemistry'] },
+    { id:'german',name:'German',category:'human',pos:[-4.5,2,-4], school:['Grammar','Text Analysis','Essay Writing','Literature'], uni:['German Linguistics','Medieval Literature','Comparative Literature','Philology'] },
+    { id:'history',name:'History',category:'human',pos:[0,-2.2,-6.5], school:['Ancient Civilizations','Medieval','Modern','World Wars'], uni:['Historiography','Economic History','Cultural History','Historical Methods'] },
+    { id:'philosophy',name:'Philosophy',category:'human',pos:[4.5,1.8,-4.5], school:['Logic','Ethics','Political Philosophy','Epistemology'], uni:['Metaphysics','Philosophy of Mind','Continental','Analytic Philosophy'] },
+    { id:'english',name:'English',category:'lang',pos:[6,-0.6,-1.5], school:['Reading','Creative Writing','Grammar','Literary Analysis'], uni:['English Linguistics','Shakespeare','Postcolonial Literature','Critical Theory'] },
+    { id:'french',name:'French',category:'lang',pos:[-6,0.8,-1], school:['Vocabulary & Grammar','Conversation','Culture','Literature'], uni:['French Linguistics','Francophone Studies','French Philosophy','Translation'] },
+    { id:'spanish',name:'Spanish',category:'lang',pos:[1.5,3.8,-5], school:['Vocabulary & Grammar','Conversation','Culture','Literature'], uni:['Spanish Linguistics','Latin American Studies','Bilingualism','Translation'] },
+    { id:'business',name:'Business',category:'econ',pos:[-2,-2.8,5.5], school:['Business Basics','Marketing','Accounting','Entrepreneurship'], uni:['Corporate Strategy','Organizational Behaviour','Supply Chain','Business Ethics'] },
+    { id:'economics',name:'Economics',category:'econ',pos:[3.5,-2.5,3], school:['Supply & Demand','Market Structures','Macroeconomics','Personal Finance'], uni:['Microeconomic Theory','Econometrics','Game Theory','Development Economics'] },
+    { id:'law',name:'Law',category:'econ',pos:[-3,-1.5,-5], school:['Constitutional Basics','Criminal Law','Civil Law','Legal Reasoning'], uni:['Jurisprudence','International Law','Contract Law','Constitutional Theory'] },
+  ];
 
-    const container = document.getElementById('canvas-container');
-    const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x070714);
-    const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 500);
-    camera.position.set(0, 4, 16);
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.2;
-    container.appendChild(renderer.domElement);
-    const labelRenderer = new CSS2DRenderer();
-    labelRenderer.setSize(window.innerWidth, window.innerHeight);
-    labelRenderer.domElement.style.position = 'absolute';
-    labelRenderer.domElement.style.top = '0';
-    labelRenderer.domElement.style.left = '0';
-    labelRenderer.domElement.style.pointerEvents = 'none';
-    container.appendChild(labelRenderer.domElement);
-    const controls = new OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true;
-    controls.dampingFactor = 0.08;
-    controls.minDistance = 3;
-    controls.maxDistance = 40;
-    controls.autoRotate = true;
-    controls.autoRotateSpeed = 0.6;
-    scene.add(new THREE.AmbientLight(0x222244, 0.6));
-    const dl = new THREE.DirectionalLight(0xffffff, 1.2);
-    dl.position.set(5, 10, 7);
-    scene.add(dl);
-    const bl = new THREE.DirectionalLight(0x6688ff, 0.4);
-    bl.position.set(-5, -5, -10);
-    scene.add(bl);
+  var container = document.getElementById('canvas-container');
+  var scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x070714);
+  var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 500);
+  camera.position.set(0, 4, 16);
+  var renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.toneMapping = THREE.ReinhardToneMapping;
+  renderer.toneMappingExposure = 1.2;
+  container.appendChild(renderer.domElement);
+  var labelRenderer = new THREE.CSS2DRenderer();
+  labelRenderer.setSize(window.innerWidth, window.innerHeight);
+  labelRenderer.domElement.style.position = 'absolute';
+  labelRenderer.domElement.style.top = '0';
+  labelRenderer.domElement.style.left = '0';
+  labelRenderer.domElement.style.pointerEvents = 'none';
+  container.appendChild(labelRenderer.domElement);
+  var controls = new THREE.OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true;
+  controls.dampingFactor = 0.08;
+  controls.minDistance = 3;
+  controls.maxDistance = 40;
+  controls.autoRotate = true;
+  controls.autoRotateSpeed = 0.6;
+  scene.add(new THREE.AmbientLight(0x222244, 0.6));
+  var dl = new THREE.DirectionalLight(0xffffff, 1.2); dl.position.set(5, 10, 7); scene.add(dl);
+  var bl = new THREE.DirectionalLight(0x6688ff, 0.4); bl.position.set(-5, -5, -10); scene.add(bl);
 
-    (function() {
-      const count = 3000;
-      const positions = new Float32Array(count * 3);
-      for (let i = 0; i < count; i++) {
-        const r = 50 + Math.random() * 150;
-        const theta = Math.random() * Math.PI * 2;
-        const phi = Math.acos(2 * Math.random() - 1);
-        positions[i*3] = r * Math.sin(phi) * Math.cos(theta);
-        positions[i*3+1] = r * Math.sin(phi) * Math.sin(theta);
-        positions[i*3+2] = r * Math.cos(phi);
-      }
-      const geo = new THREE.BufferGeometry();
-      geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-      scene.add(new THREE.Points(geo, new THREE.PointsMaterial({ color: 0xffffff, size: 0.25, sizeAttenuation: true, transparent: true, opacity: 0.8 })));
-    })();
-
-    const glowTex = (function() {
-      const c = document.createElement('canvas'); c.width = 256; c.height = 256;
-      const ctx = c.getContext('2d');
-      const g = ctx.createRadialGradient(128, 128, 0, 128, 128, 128);
-      g.addColorStop(0,'rgba(255,255,255,1)'); g.addColorStop(0.15,'rgba(255,255,255,0.9)'); g.addColorStop(0.4,'rgba(255,255,255,0.3)'); g.addColorStop(0.7,'rgba(255,255,255,0.08)'); g.addColorStop(1,'rgba(255,255,255,0)');
-      ctx.fillStyle = g; ctx.fillRect(0, 0, 256, 256);
-      return new THREE.CanvasTexture(c);
-    })();
-
-    const starMeshes = [], starObjs = [];
-    SUBJECTS.forEach((s, i) => {
-      const cat = CATEGORIES[s.category];
-      const col = new THREE.Color(cat.color);
-      const mesh = new THREE.Mesh(new THREE.SphereGeometry(0.6, 32, 32), new THREE.MeshStandardMaterial({ color: col, emissive: col, emissiveIntensity: 0.3, roughness: 0.2, metalness: 0.1 }));
-      mesh.position.set(s.pos[0], s.pos[1], s.pos[2]);
-      mesh.userData.subjectIndex = i;
-      scene.add(mesh);
-      starMeshes.push(mesh);
-      const glow = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, color: col, transparent: true, blending: THREE.AdditiveBlending, opacity: 0.45, depthWrite: false }));
-      glow.scale.set(3.2, 3.2, 1);
-      glow.position.set(s.pos[0], s.pos[1], s.pos[2]);
-      scene.add(glow);
-      const div = document.createElement('div');
-      div.textContent = s.name;
-      div.style.cssText = 'color:#fff;font-size:14px;font-weight:400;letter-spacing:1px;text-shadow:0 0 20px ' + cat.color + ',0 0 60px ' + cat.color + ';background:rgba(0,0,0,0.35);padding:4px 14px;border-radius:12px;border:1px solid ' + cat.color + '44;backdrop-filter:blur(4px);pointer-events:none;';
-      const label = new CSS2DObject(div);
-      label.position.set(s.pos[0], s.pos[1] - 1.2, s.pos[2]);
-      scene.add(label);
-      starObjs.push({ mesh, glow, label, data: s, meshMat: mesh.material, glowMat: glow.material });
-    });
-
-    const raycaster = new THREE.Raycaster(), pointer = new THREE.Vector2();
-    let hover = -1, selected = -1;
-    const tooltip = document.getElementById('tooltip'), panel = document.getElementById('info-panel');
-    const pTitle = document.getElementById('panel-title'), pSchool = document.getElementById('panel-school'), pUni = document.getElementById('panel-uni');
-
-    function clearHover() { if (hover >= 0) { const o = starObjs[hover]; o.meshMat.emissiveIntensity = 0.3; o.glowMat.opacity = 0.45; } hover = -1; }
-    function closeP() { panel.classList.remove('open'); panel.className = ''; selected = -1; controls.autoRotate = true; }
-    function openP(idx) {
-      const s = SUBJECTS[idx], c = CATEGORIES[s.category];
-      pTitle.textContent = s.name; pTitle.style.borderBottomColor = c.color;
-      panel.className = 'open ' + c.cssClass;
-      pSchool.innerHTML = ''; s.school.forEach(t => { const l = document.createElement('li'); l.textContent = t; l.style.borderLeftColor = c.color; pSchool.appendChild(l); });
-      pUni.innerHTML = ''; s.uni.forEach(t => { const l = document.createElement('li'); l.textContent = t; l.style.borderLeftColor = c.color; pUni.appendChild(l); });
+  (function() {
+    var count = 3000, positions = new Float32Array(count * 3);
+    for (var i = 0; i < count; i++) {
+      var r = 50 + Math.random() * 150, theta = Math.random() * Math.PI * 2, phi = Math.acos(2 * Math.random() - 1);
+      positions[i*3] = r * Math.sin(phi) * Math.cos(theta);
+      positions[i*3+1] = r * Math.sin(phi) * Math.sin(theta);
+      positions[i*3+2] = r * Math.cos(phi);
     }
+    var geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    scene.add(new THREE.Points(geo, new THREE.PointsMaterial({ color: 0xffffff, size: 0.25, sizeAttenuation: true, transparent: true, opacity: 0.8 })));
+  })();
 
-    renderer.domElement.addEventListener('pointermove', e => {
-      const r = renderer.domElement.getBoundingClientRect();
-      pointer.x = ((e.clientX - r.left) / r.width) * 2 - 1;
-      pointer.y = -((e.clientY - r.top) / r.height) * 2 + 1;
-      raycaster.setFromCamera(pointer, camera);
-      const hits = raycaster.intersectObjects(starMeshes);
-      if (hits.length > 0) {
-        const idx = hits[0].object.userData.subjectIndex;
-        if (idx !== undefined && idx !== hover) { clearHover(); hover = idx; const o = starObjs[idx]; o.meshMat.emissiveIntensity = 0.8; o.glowMat.opacity = 0.8; }
-        renderer.domElement.style.cursor = 'pointer';
-        tooltip.textContent = SUBJECTS[idx].name;
-        tooltip.style.left = (e.clientX + 14) + 'px'; tooltip.style.top = (e.clientY - 10) + 'px';
-        tooltip.classList.add('visible');
-      } else { if (hover >= 0) clearHover(); renderer.domElement.style.cursor = 'default'; tooltip.classList.remove('visible'); }
+  var glowTex = (function() {
+    var c = document.createElement('canvas'); c.width = 256; c.height = 256;
+    var ctx = c.getContext('2d');
+    var g = ctx.createRadialGradient(128, 128, 0, 128, 128, 128);
+    g.addColorStop(0,'rgba(255,255,255,1)'); g.addColorStop(0.15,'rgba(255,255,255,0.9)'); g.addColorStop(0.4,'rgba(255,255,255,0.3)'); g.addColorStop(0.7,'rgba(255,255,255,0.08)'); g.addColorStop(1,'rgba(255,255,255,0)');
+    ctx.fillStyle = g; ctx.fillRect(0, 0, 256, 256);
+    return new THREE.CanvasTexture(c);
+  })();
+
+  var starMeshes = [], starObjs = [];
+  SUBJECTS.forEach(function(s, i) {
+    var cat = CATEGORIES[s.category], col = new THREE.Color(cat.color);
+    var mesh = new THREE.Mesh(new THREE.SphereGeometry(0.6, 32, 32), new THREE.MeshStandardMaterial({ color: col, emissive: col, emissiveIntensity: 0.3, roughness: 0.2, metalness: 0.1 }));
+    mesh.position.set(s.pos[0], s.pos[1], s.pos[2]); mesh.userData.subjectIndex = i; scene.add(mesh); starMeshes.push(mesh);
+    var glow = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, color: col, transparent: true, blending: THREE.AdditiveBlending, opacity: 0.45, depthWrite: false }));
+    glow.scale.set(3.2, 3.2, 1); glow.position.set(s.pos[0], s.pos[1], s.pos[2]); scene.add(glow);
+    var div = document.createElement('div');
+    div.textContent = s.name;
+    div.style.cssText = 'color:#fff;font-size:14px;font-weight:400;letter-spacing:1px;text-shadow:0 0 20px ' + cat.color + ',0 0 60px ' + cat.color + ';background:rgba(0,0,0,0.35);padding:4px 14px;border-radius:12px;border:1px solid ' + cat.color + '44;backdrop-filter:blur(4px);pointer-events:none;';
+    var label = new THREE.CSS2DObject(div);
+    label.position.set(s.pos[0], s.pos[1] - 1.2, s.pos[2]); scene.add(label);
+    starObjs.push({ mesh: mesh, glow: glow, label: label, data: s, meshMat: mesh.material, glowMat: glow.material });
+  });
+
+  var raycaster = new THREE.Raycaster(), pointer = new THREE.Vector2();
+  var hover = -1, selected = -1;
+  var tooltip = document.getElementById('tooltip'), panel = document.getElementById('info-panel');
+  var pTitle = document.getElementById('panel-title'), pSchool = document.getElementById('panel-school'), pUni = document.getElementById('panel-uni');
+
+  function clearHover() { if (hover >= 0) { var o = starObjs[hover]; o.meshMat.emissiveIntensity = 0.3; o.glowMat.opacity = 0.45; } hover = -1; }
+  function closeP() { panel.classList.remove('open'); panel.className = ''; selected = -1; controls.autoRotate = true; }
+  function openP(idx) {
+    var s = SUBJECTS[idx], c = CATEGORIES[s.category];
+    pTitle.textContent = s.name; pTitle.style.borderBottomColor = c.color;
+    panel.className = 'open ' + c.cssClass;
+    pSchool.innerHTML = ''; s.school.forEach(function(t) { var l = document.createElement('li'); l.textContent = t; l.style.borderLeftColor = c.color; pSchool.appendChild(l); });
+    pUni.innerHTML = ''; s.uni.forEach(function(t) { var l = document.createElement('li'); l.textContent = t; l.style.borderLeftColor = c.color; pUni.appendChild(l); });
+  }
+
+  renderer.domElement.addEventListener('pointermove', function(e) {
+    var r = renderer.domElement.getBoundingClientRect();
+    pointer.x = ((e.clientX - r.left) / r.width) * 2 - 1;
+    pointer.y = -((e.clientY - r.top) / r.height) * 2 + 1;
+    raycaster.setFromCamera(pointer, camera);
+    var hits = raycaster.intersectObjects(starMeshes);
+    if (hits.length > 0) {
+      var idx = hits[0].object.userData.subjectIndex;
+      if (idx !== undefined && idx !== hover) { clearHover(); hover = idx; var o = starObjs[idx]; o.meshMat.emissiveIntensity = 0.8; o.glowMat.opacity = 0.8; }
+      renderer.domElement.style.cursor = 'pointer';
+      tooltip.textContent = SUBJECTS[idx].name;
+      tooltip.style.left = (e.clientX + 14) + 'px'; tooltip.style.top = (e.clientY - 10) + 'px';
+      tooltip.classList.add('visible');
+    } else { if (hover >= 0) clearHover(); renderer.domElement.style.cursor = 'default'; tooltip.classList.remove('visible'); }
+  });
+
+  var animating = false;
+  renderer.domElement.addEventListener('click', function(e) {
+    if (panel.classList.contains('open')) { var r = panel.getBoundingClientRect(); if (e.clientX < r.left) { closeP(); return; } }
+    var r = renderer.domElement.getBoundingClientRect();
+    pointer.x = ((e.clientX - r.left) / r.width) * 2 - 1;
+    pointer.y = -((e.clientY - r.top) / r.height) * 2 + 1;
+    raycaster.setFromCamera(pointer, camera);
+    var hits = raycaster.intersectObjects(starMeshes);
+    if (hits.length > 0) { var idx = hits[0].object.userData.subjectIndex; if (idx !== undefined) selectStar(idx); }
+  });
+
+  function selectStar(idx) {
+    if (animating) return;
+    selected = idx;
+    var o = starObjs[idx], p = o.mesh.position.clone();
+    var sp = camera.position.clone(), st = controls.target.clone(), et = p.clone();
+    var ep = p.clone().add(p.clone().normalize().multiplyScalar(-3.5)); ep.y += 1.2;
+    animating = true; controls.enabled = false; controls.autoRotate = false;
+    var dur = 900, sTime = performance.now();
+    (function step() { var t = Math.min((performance.now() - sTime) / dur, 1), e = 1 - Math.pow(1 - t, 3); camera.position.lerpVectors(sp, ep, e); controls.target.lerpVectors(st, et, e); controls.update(); if (t < 1) requestAnimationFrame(step); else { animating = false; controls.enabled = true; openP(idx); } })();
+  }
+
+  document.getElementById('panel-close').addEventListener('click', closeP);
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && panel.classList.contains('open')) closeP(); });
+
+  var starField, clock = new THREE.Clock();
+  for (var k = 0; k < scene.children.length; k++) { if (scene.children[k].isPoints) { starField = scene.children[k]; break; } }
+
+  function animate() {
+    requestAnimationFrame(animate);
+    var t = clock.getElapsedTime();
+    starField.rotation.y = t * 0.004; starField.rotation.x = Math.sin(t * 0.002) * 0.02;
+    starObjs.forEach(function(o, i) {
+      o.mesh.rotation.y += 0.008; o.mesh.rotation.x += 0.003;
+      var off = i * 0.5, fy = Math.sin(t * 0.3 + off) * 0.06, by = o.data.pos[1];
+      o.mesh.position.y = by + fy; o.glow.position.y = by + fy; o.label.position.y = by - 1.2 + fy;
+      if (i === hover) { o.mesh.scale.setScalar(1.2 + Math.sin(t * 3 + off) * 0.08); o.glowMat.opacity = 0.7 + Math.sin(t * 2.5 + off) * 0.15; }
+      else if (i !== selected || !panel.classList.contains('open')) o.mesh.scale.setScalar(1);
+      if (i === selected && panel.classList.contains('open')) { o.mesh.scale.setScalar(1 + Math.sin(t * 2 + off) * 0.05); o.meshMat.emissiveIntensity = 0.6 + Math.sin(t * 2.5) * 0.2; }
     });
+    controls.update(); renderer.render(scene, camera); labelRenderer.render(scene, camera);
+  }
 
-    let animating = false;
-    renderer.domElement.addEventListener('click', e => {
-      if (panel.classList.contains('open')) { const r = panel.getBoundingClientRect(); if (e.clientX < r.left) { closeP(); return; } }
-      const r = renderer.domElement.getBoundingClientRect();
-      pointer.x = ((e.clientX - r.left) / r.width) * 2 - 1;
-      pointer.y = -((e.clientY - r.top) / r.height) * 2 + 1;
-      raycaster.setFromCamera(pointer, camera);
-      const hits = raycaster.intersectObjects(starMeshes);
-      if (hits.length > 0) { const idx = hits[0].object.userData.subjectIndex; if (idx !== undefined) selectStar(idx); }
-    });
+  window.addEventListener('resize', function() { var w = window.innerWidth, h = window.innerHeight; camera.aspect = w / h; camera.updateProjectionMatrix(); renderer.setSize(w, h); labelRenderer.setSize(w, h); });
 
-    function selectStar(idx) {
-      if (animating) return;
-      selected = idx;
-      const o = starObjs[idx], p = o.mesh.position.clone();
-      const sp = camera.position.clone(), st = controls.target.clone(), et = p.clone();
-      const ep = p.clone().add(p.clone().normalize().multiplyScalar(-3.5)); ep.y += 1.2;
-      animating = true; controls.enabled = false; controls.autoRotate = false;
-      const dur = 900, sTime = performance.now();
-      (function step() { const t = Math.min((performance.now() - sTime) / dur, 1), e = 1 - Math.pow(1 - t, 3); camera.position.lerpVectors(sp, ep, e); controls.target.lerpVectors(st, et, e); controls.update(); if (t < 1) requestAnimationFrame(step); else { animating = false; controls.enabled = true; openP(idx); } })();
-    }
-
-    document.getElementById('panel-close').addEventListener('click', closeP);
-    document.addEventListener('keydown', e => { if (e.key === 'Escape' && panel.classList.contains('open')) closeP(); });
-
-    const starField = scene.children.find(c => c.isPoints);
-    const clock = new THREE.Clock();
-    function animate() {
-      requestAnimationFrame(animate);
-      const t = clock.getElapsedTime();
-      starField.rotation.y = t * 0.004; starField.rotation.x = Math.sin(t * 0.002) * 0.02;
-      starObjs.forEach((o, i) => {
-        o.mesh.rotation.y += 0.008; o.mesh.rotation.x += 0.003;
-        const off = i * 0.5, fy = Math.sin(t * 0.3 + off) * 0.06, by = o.data.pos[1];
-        o.mesh.position.y = by + fy; o.glow.position.y = by + fy; o.label.position.y = by - 1.2 + fy;
-        if (i === hover) { o.mesh.scale.setScalar(1.2 + Math.sin(t * 3 + off) * 0.08); o.glowMat.opacity = 0.7 + Math.sin(t * 2.5 + off) * 0.15; }
-        else if (i !== selected || !panel.classList.contains('open')) o.mesh.scale.setScalar(1);
-        if (i === selected && panel.classList.contains('open')) { o.mesh.scale.setScalar(1 + Math.sin(t * 2 + off) * 0.05); o.meshMat.emissiveIntensity = 0.6 + Math.sin(t * 2.5) * 0.2; }
-      });
-      controls.update(); renderer.render(scene, camera); labelRenderer.render(scene, camera);
-    }
-
-    window.addEventListener('resize', () => { const w = window.innerWidth, h = window.innerHeight; camera.aspect = w / h; camera.updateProjectionMatrix(); renderer.setSize(w, h); labelRenderer.setSize(w, h); });
-
-    errorEl.classList.add('hidden');
-    animate();
-  } catch (err) { errorEl.textContent = 'Error: ' + err.message; console.error(err); }
+  errorEl.classList.add('hidden');
+  animate();
 })();
 </script>
 </body>
